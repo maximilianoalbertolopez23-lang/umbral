@@ -1,26 +1,119 @@
 @import "tailwindcss";
+@import "./hojas.css";
+@import "./sala.css";
+
+/* Paleta oficial de UMBRAL (brand/README.md). No agregar colores nuevos: derivar con color-mix. */
+@theme {
+  --color-ciruela: #2e182f;
+  --color-morado: #512d47;
+  --color-durazno: #f2c7a2;
+  --color-malva: #ae7a7e;
+  --color-marfil: #fcf8f2;
+
+  /* Derivados */
+  --color-noche: color-mix(in srgb, #2e182f 62%, black);
+  --color-velo: color-mix(in srgb, #512d47 55%, #2e182f);
+  --color-texto-suave: color-mix(in srgb, #fcf8f2 72%, #2e182f);
+
+  --font-marca: var(--font-eb-garamond), "EB Garamond", Garamond, Georgia, serif;
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+
+  --animate-titilar: titilar 4.5s ease-in-out infinite;
+  --animate-aparecer: aparecer 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes titilar {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Transiciones de escena (docs/TRANSICIONES.md). Son solo CSS: no retrasan la navegación ni el guardado. */
+@keyframes t-pergamino { from { opacity: 0; transform: scaleY(0.82); } to { opacity: 1; transform: none; } }
+@keyframes t-panel { from { opacity: 0; transform: translateX(22px); } to { opacity: 1; transform: none; } }
+@keyframes t-zoom { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
+@keyframes t-elevar { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes t-libro { from { opacity: 0; transform: perspective(1100px) rotateY(-9deg); } to { opacity: 1; transform: none; } }
+@keyframes t-retorno { from { opacity: 0; } to { opacity: 1; } }
+@keyframes t-travelling { from { opacity: 0; transform: scale(1.07); } to { opacity: 1; transform: none; } }
+
+@keyframes t-aviso-entra { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes t-aviso-sale { from { opacity: 1; } to { opacity: 0; transform: translateY(6px); } }
+.t-aviso-entra { animation: t-aviso-entra 300ms ease-out both; }
+.t-aviso-sale { animation: t-aviso-sale 250ms ease-in both; }
+/* Pantalla de carga: aparece a los 250 ms para no destellar en cargas rápidas. */
+@keyframes t-carga-entra { from { opacity: 0; } to { opacity: 1; } }
+@keyframes t-barra { 0% { transform: translateX(-110%); } 100% { transform: translateX(310%); } }
+.carga-pantalla { animation: t-carga-entra 350ms ease-out 250ms both; }
+.carga-barra > span { animation: t-barra 1.9s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+.carga-frase { animation: t-retorno 700ms ease-out both; }
+
+.t-pergamino { transform-origin: top; animation: t-pergamino 600ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.t-panel { animation: t-panel 400ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.t-zoom { animation: t-zoom 650ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.t-elevar { animation: t-elevar 450ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.t-libro { transform-origin: 0 50%; animation: t-libro 750ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.t-retorno { animation: t-retorno 400ms ease-out both; }
+.t-travelling { animation: t-travelling 1400ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Marco ornamentado (storyboard): doble filete durazno y esquinas, para paneles principales. */
+.marco-ornato {
+  position: relative;
+  border: 1px solid color-mix(in srgb, #f2c7a2 55%, transparent);
+  box-shadow: inset 0 0 0 5px var(--color-noche), inset 0 0 0 6px color-mix(in srgb, #f2c7a2 28%, transparent), 0 14px 34px rgba(0, 0, 0, 0.35);
+  background-image: linear-gradient(180deg, color-mix(in srgb, #512d47 70%, transparent), color-mix(in srgb, #2e182f 85%, black));
+}
+.marco-ornato::before,
+.marco-ornato::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #f2c7a2;
+  pointer-events: none;
+}
+.marco-ornato::before { top: 9px; left: 9px; border-right: 0; border-bottom: 0; border-top-left-radius: 8px; }
+.marco-ornato::after { right: 9px; bottom: 9px; border-left: 0; border-top: 0; border-bottom-right-radius: 8px; }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-ciruela);
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ciruela);
+  color: var(--color-marfil);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-durazno);
+  color: var(--color-ciruela);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-durazno);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  [data-parallax] { transform: none !important; }
+  .carga-barra > span { width: 100%; opacity: 0.55; animation: none !important; transform: none; }
 }

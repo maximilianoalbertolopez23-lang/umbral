@@ -1,0 +1,219 @@
+/* ------------------------------------------------------------------
+   El Escritorio: hojas del cuaderno. La plantilla es solo una capa de
+   estilo (data-plantilla): el contenido de la página nunca cambia.
+   ------------------------------------------------------------------ */
+@keyframes pasar-pagina {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes pasar-pagina-libro {
+  from { opacity: 0; transform: perspective(1400px) rotateY(-5deg) translateX(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+.hoja {
+  --tinta: #2e182f;
+  --tinta-suave: color-mix(in srgb, #2e182f 72%, #fcf8f2);
+  --acento: #512d47;
+  --linea: color-mix(in srgb, #ae7a7e 60%, transparent);
+  --fondo-campo: color-mix(in srgb, #512d47 7%, transparent);
+  --fuente-cuerpo: var(--font-marca);
+  --tam-cuerpo: 1.2rem;
+  position: relative;
+  isolation: isolate;
+  border-radius: 6px;
+  padding: clamp(1.1rem, 4.5vw, 3.25rem);
+  color: var(--tinta);
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--tam-cuerpo);
+  line-height: var(--interlineado, 1.7);
+  animation: pasar-pagina 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* En pantallas amplias la hoja se "da vuelta"; en celular solo aparece (prioriza el editor sobre el efecto). */
+@media (min-width: 768px) {
+  .hoja { animation-name: pasar-pagina-libro; transform-origin: left center; }
+}
+
+/* Pergamino clásico: papel cálido, bordes envejecidos, grano de papel */
+.hoja[data-plantilla="pergamino"] {
+  background-color: color-mix(in srgb, #fcf8f2 80%, #f2c7a2);
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.4), transparent 62%),
+    radial-gradient(ellipse at 100% 100%, rgba(174, 122, 126, 0.3), transparent 55%),
+    radial-gradient(ellipse at 0% 100%, rgba(242, 199, 162, 0.5), transparent 50%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .18 0 0 0 0 .09 0 0 0 0 .18 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  box-shadow: inset 0 0 70px rgba(174, 122, 126, 0.4), 0 20px 40px -14px rgba(0, 0, 0, 0.65);
+}
+
+/* Archivo fantástico: papel de noche, tinta durazno, marco ornamental */
+.hoja[data-plantilla="archivo"] {
+  --tinta: #fcf8f2;
+  --tinta-suave: color-mix(in srgb, #fcf8f2 74%, #2e182f);
+  --acento: #f2c7a2;
+  --linea: color-mix(in srgb, #f2c7a2 38%, transparent);
+  --fondo-campo: color-mix(in srgb, #f2c7a2 8%, transparent);
+  background-color: #2e182f;
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgba(81, 45, 71, 0.9), transparent 65%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .95 0 0 0 0 .78 0 0 0 0 .64 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  box-shadow:
+    inset 0 0 0 6px #2e182f,
+    inset 0 0 0 7px rgba(242, 199, 162, 0.5),
+    inset 0 0 0 10px #2e182f,
+    inset 0 0 0 11px rgba(242, 199, 162, 0.22),
+    0 20px 44px -14px rgba(0, 0, 0, 0.75);
+  padding: clamp(1.6rem, 5.5vw, 3.75rem);
+}
+.hoja[data-plantilla="archivo"] h2,
+.hoja[data-plantilla="archivo"] h3,
+.hoja[data-plantilla="archivo"] h4 {
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  color: var(--acento);
+}
+
+/* Minimalista editorial: aire, línea fina, cuerpo en Inter */
+.hoja[data-plantilla="editorial"] {
+  --fuente-cuerpo: var(--font-sans);
+  --tam-cuerpo: 1.02rem;
+  --linea: color-mix(in srgb, #2e182f 22%, transparent);
+  background-color: #fcf8f2;
+  box-shadow: 0 1px 0 rgba(46, 24, 47, 0.08), 0 18px 36px -18px rgba(0, 0, 0, 0.55);
+  --interlineado: 1.8;
+  padding: clamp(1.25rem, 6vw, 4.25rem);
+}
+.hoja[data-plantilla="editorial"] h1,
+.hoja[data-plantilla="editorial"] h2,
+.hoja[data-plantilla="editorial"] h3,
+.hoja[data-plantilla="editorial"] h4 {
+  font-family: var(--font-marca);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.hoja[data-plantilla="editorial"] .hoja-titulo { border-bottom: 1px solid var(--linea); padding-bottom: 0.6rem; }
+
+/* La hoja de debajo (solo con espacio) */
+@media (min-width: 768px) {
+  .hoja::before {
+    content: "";
+    position: absolute;
+    inset: 5px -5px -6px 6px;
+    z-index: -1;
+    border-radius: 6px;
+    background: inherit;
+    filter: brightness(0.82);
+    opacity: 0.85;
+  }
+}
+
+.hoja h1, .hoja h2, .hoja h3, .hoja h4 { font-family: var(--font-marca); line-height: 1.2; color: var(--tinta); }
+.hoja h2 { font-size: 1.9rem; margin-top: 0.4em; }
+.hoja h3 { font-size: 1.5rem; }
+.hoja h4 { font-size: 1.2rem; }
+.hoja p { margin: 0 0 var(--espacio-bloque, 0.8em); }
+.hoja ul, .hoja ol { padding-left: 1.4em; margin: 0 0 0.9em; }
+.hoja ul { list-style: disc; }
+.hoja ol { list-style: decimal; }
+.hoja ul.tareas { list-style: none; padding-left: 0.2em; }
+.hoja blockquote {
+  margin: 0.6em 0 1em;
+  padding: 0.2em 0 0.2em 1.1em;
+  border-left: 3px solid var(--acento);
+  font-style: italic;
+  color: var(--tinta);
+}
+.hoja hr { border: 0; text-align: center; margin: 1.4em 0; color: var(--linea); }
+.hoja hr::after { content: var(--orn-sep, "\2726  \2726  \2726"); letter-spacing: 0.6em; font-size: 0.8rem; }
+.hoja figure { margin: 1em 0; }
+.hoja figure img { display: block; max-width: 100%; height: auto; border-radius: 3px; box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.6); }
+.hoja figcaption { margin-top: 0.4em; font-size: 0.9em; color: var(--tinta-suave); font-style: italic; }
+.hoja .etiqueta-hoja {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+.hoja ::selection { background: var(--acento); color: #fcf8f2; }
+.hoja[data-plantilla="archivo"] ::selection { color: #2e182f; }
+
+/* Campos del editor: se funden con la hoja */
+.hoja .campo {
+  display: block;
+  width: 100%;
+  background: var(--fondo-campo);
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  border: 0;
+  border-bottom: 1px dashed var(--linea);
+  border-radius: 3px;
+  padding: 0.25em 0.4em;
+  field-sizing: content;
+  min-height: 2.2em;
+}
+.hoja .campo::placeholder { color: var(--tinta-suave); opacity: 0.7; font-style: italic; }
+.hoja .campo:focus-visible { outline: 2px solid var(--acento); outline-offset: 1px; }
+.hoja .prosa {
+  outline: none;
+  min-height: 2.2em;
+  padding: 0.25em 0.4em;
+  background: var(--fondo-campo);
+  border-bottom: 1px dashed var(--linea);
+  border-radius: 3px;
+}
+.hoja .prosa:focus-visible { outline: 2px solid var(--acento); outline-offset: 1px; }
+.hoja .prosa p:last-child { margin-bottom: 0; }
+.hoja .prosa p.es-vacio:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--tinta-suave);
+  opacity: 0.65;
+  font-style: italic;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+.hoja .boton-hoja {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  line-height: 1;
+  color: var(--acento);
+  background: transparent;
+  border: 1px solid var(--linea);
+  border-radius: 999px;
+  min-height: 2.25rem;
+  min-width: 2.25rem;
+  padding: 0 0.7rem;
+  cursor: pointer;
+}
+.hoja .boton-hoja:hover { background: var(--fondo-campo); }
+.hoja .boton-hoja[aria-pressed="true"] { background: var(--acento); color: #fcf8f2; }
+.hoja[data-plantilla="archivo"] .boton-hoja[aria-pressed="true"] { color: #2e182f; }
+.hoja .boton-hoja:disabled { opacity: 0.4; cursor: default; }
+.hoja .bloque-editor { position: relative; border-radius: 6px; padding: calc(var(--espacio-bloque, 0.8em) * 0.5) 0; }
+.hoja .bloque-editor[data-sobre="true"] { box-shadow: 0 -3px 0 0 var(--acento); }
+
+/* Personalización del journal (El Taller): solo presentación, controlada por data-* y variables */
+.hoja[data-titulos="centro"] h1,
+.hoja[data-titulos="centro"] h2,
+.hoja[data-titulos="centro"] h3,
+.hoja[data-titulos="centro"] h4,
+.hoja[data-titulos="centro"] .hoja-titulo { text-align: center; }
+@media (min-width: 768px) {
+  .hoja[data-columnas="2"] .bloques-leer { column-count: 2; column-gap: 2.5rem; }
+  .hoja[data-columnas="2"] .bloques-leer > * { break-inside: avoid; }
+}
+.hoja[data-borde="ornamental"]::after {
+  content: var(--orn-sep, "\2726");
+  position: absolute;
+  bottom: 0.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--acento);
+  opacity: 0.7;
+  font-size: 0.85rem;
+  letter-spacing: 0.5em;
+  pointer-events: none;
+}

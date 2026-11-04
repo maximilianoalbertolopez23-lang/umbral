@@ -1,0 +1,215 @@
+/* ------------------------------------------------------------------
+   La Gran Sala: luces según la apariencia, llamas, objetos interactivos.
+   Solo se animan transform y opacity (baratos). Todo se detiene con
+   prefers-reduced-motion o con la preferencia «Reducir movimiento».
+   ------------------------------------------------------------------ */
+.sala-escena {
+  --cielo-a: #512d47;
+  --cielo-b: #2e182f;
+  --luna: #f2c7a2;
+  --luna-o: 1;
+  --rayo: #fcf8f2;
+  --rayo-o: 0.9;
+  --llama: #f2c7a2;
+  --tinte: transparent;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #170a18;
+}
+.sala-escena[data-apariencia="ocaso"] {
+  --cielo-a: #ae7a7e;
+  --cielo-b: #512d47;
+  --luna-o: 0.5;
+  --rayo: #f2c7a2;
+  --rayo-o: 1;
+  --tinte: rgba(174, 122, 126, 0.16);
+}
+.sala-escena[data-apariencia="alba"] {
+  --cielo-a: #f2c7a2;
+  --cielo-b: #ae7a7e;
+  --luna-o: 0.28;
+  --rayo: #fcf8f2;
+  --rayo-o: 1;
+  --tinte: rgba(242, 199, 162, 0.14);
+}
+
+.sala-scroll { overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: thin; }
+
+/* El lienzo mantiene 16:9; en pantallas angostas es más ancho que la pantalla y se recorre deslizando. */
+.sala-lienzo {
+  --alto: clamp(360px, 62svh, 640px);
+  position: relative;
+  width: max(100%, calc(var(--alto) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  scroll-snap-align: center;
+}
+
+.sala-camara { position: absolute; inset: 0; transition: transform 560ms cubic-bezier(0.5, 0, 0.75, 0.35), opacity 560ms ease-in; }
+.sala-camara.entrando { animation: t-travelling 1400ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.sala-camara.acercando { transform: scale(2.4); opacity: 0; }
+
+@keyframes llama {
+  0%, 100% { transform: scale(1, 1); opacity: 0.95; }
+  35% { transform: scale(0.92, 1.1); opacity: 0.8; }
+  70% { transform: scale(1.06, 0.94); opacity: 1; }
+}
+.llama { transform-box: fill-box; transform-origin: 50% 100%; animation: llama 2.3s ease-in-out infinite; }
+.llama:nth-of-type(2n) { animation-duration: 2.9s; animation-delay: -0.9s; }
+
+@keyframes respirar { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+.rayo { animation: respirar 10s ease-in-out infinite; }
+
+@keyframes parpadeo { 0%, 100% { opacity: 0.8; } 45% { opacity: 0.55; } 75% { opacity: 1; } }
+
+/* Resplandores cálidos de las velas y luz de luna (capas HTML por encima del arte, sin capturar clics) */
+.sala-luz { position: absolute; inset: 0; pointer-events: none; }
+.sala-luz-luna { background: radial-gradient(ellipse 22% 38% at 50% 28%, rgba(252, 248, 242, 0.2), transparent 70%); mix-blend-mode: screen; }
+.sala-luz-velas::before,
+.sala-luz-velas::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 199, 162, 0.42), rgba(242, 199, 162, 0.12) 45%, transparent 70%);
+  mix-blend-mode: screen;
+  animation: parpadeo 3.1s ease-in-out infinite;
+}
+.sala-luz-velas::before { width: 18%; aspect-ratio: 1; left: 29%; top: 40%; }
+.sala-luz-velas::after { width: 16%; aspect-ratio: 1; left: 80.5%; top: 41%; animation-delay: -1.2s; }
+.sala-escena[data-velas="off"] .sala-luz-velas { display: none; }
+.sala-escena[data-velas="off"] .llama { display: none; }
+.sala-escena[data-velas="off"] .sala-sombra-velas { opacity: 1; }
+.sala-sombra { position: absolute; inset: 0; pointer-events: none; background: var(--tinte); }
+.sala-sombra-velas { background: rgba(10, 4, 12, 0.34); opacity: 0; transition: opacity 400ms ease; }
+
+/* Objetos interactivos */
+.hotspot {
+  position: absolute;
+  display: block;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.hotspot::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 20px;
+  background: radial-gradient(ellipse at 50% 55%, rgba(242, 199, 162, 0.2), transparent 72%);
+  box-shadow: 0 0 0 2px rgba(242, 199, 162, 0);
+  opacity: 0;
+  transition: opacity 260ms ease, box-shadow 260ms ease;
+  pointer-events: none;
+}
+.hotspot:hover::after,
+.hotspot:focus-visible::after { opacity: 1; box-shadow: 0 0 0 2px rgba(242, 199, 162, 0.9), 0 0 34px 6px rgba(242, 199, 162, 0.35); }
+.hotspot:focus-visible { outline: none; }
+.hotspot:active::after { opacity: 1; box-shadow: 0 0 0 3px #fcf8f2, 0 0 40px 10px rgba(242, 199, 162, 0.5); }
+
+.hotspot .rotulo {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translate(-50%, 4px);
+  width: max-content;
+  max-width: 220px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(242, 199, 162, 0.5);
+  background: rgba(23, 10, 24, 0.92);
+  color: #fcf8f2;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  line-height: 1.25;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms ease;
+  z-index: 5;
+}
+.hotspot .rotulo small { display: block; color: #f2c7a2; font-size: 0.72rem; }
+
+/* Placas ornamentadas (storyboard): los destinos principales llevan su nombre siempre visible */
+.hotspot[data-placa] .rotulo {
+  padding: 7px 22px;
+  border-radius: 999px;
+  border: 1px solid #f2c7a2;
+  background: linear-gradient(180deg, #512d47, #2e182f);
+  box-shadow: inset 0 0 0 3px #2e182f, inset 0 0 0 4px rgba(242, 199, 162, 0.45), 0 8px 18px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-marca);
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  opacity: 1;
+}
+.hotspot[data-placa] .rotulo small { display: none; }
+.hotspot[data-placa]:hover .rotulo small,
+.hotspot[data-placa]:focus-visible .rotulo small { display: block; }
+.hotspot[data-rotulo="abajo"] .rotulo { bottom: auto; top: calc(100% + 10px); transform: translate(-50%, -4px); }
+.hotspot[data-rotulo="centro"] .rotulo { bottom: auto; top: 26%; transform: translate(-50%, -50%); }
+.hotspot[data-rotulo="dentro"] .rotulo { bottom: auto; top: 70%; transform: translate(-50%, -50%); }
+.hotspot:hover .rotulo,
+.hotspot:focus-visible .rotulo { opacity: 1; transform: translate(-50%, 0); }
+.hotspot[data-rotulo="centro"]:hover .rotulo,
+.hotspot[data-rotulo="centro"]:focus-visible .rotulo,
+.hotspot[data-rotulo="dentro"]:hover .rotulo,
+.hotspot[data-rotulo="dentro"]:focus-visible .rotulo { transform: translate(-50%, -50%); }
+/* En pantallas táctiles no hay "pasar el cursor": los rótulos quedan siempre visibles */
+@media (hover: none) {
+  .hotspot .rotulo { opacity: 1; transform: translate(-50%, 0); font-size: 0.72rem; padding: 4px 8px; }
+  .hotspot[data-rotulo="centro"] .rotulo,
+  .hotspot[data-rotulo="dentro"] .rotulo { transform: translate(-50%, -50%); }
+  /* En táctil solo el nombre: el detalle sigue en el nombre accesible y en el panel de cada objeto */
+  .hotspot .rotulo small { display: none; }
+  .hotspot .rotulo { white-space: nowrap; }
+}
+
+/* Libro destacado sobre el atril */
+.atril-libro { position: absolute; left: 14%; top: 4%; width: 74%; transform: rotate(-7deg); transform-origin: bottom center; transition: transform 300ms ease; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.6)); }
+.hotspot:hover .atril-libro,
+.hotspot:focus-visible .atril-libro { transform: rotate(-3deg) translateY(-6px) scale(1.05); }
+
+/* Estancias: vistas recortadas de la misma escena */
+.estancia { position: relative; overflow: hidden; border-radius: 20px; border: 1px solid rgba(174, 122, 126, 0.35); height: clamp(150px, 26vw, 250px); }
+
+/* «Reducir movimiento» elegido en El Taller (además de prefers-reduced-motion) */
+[data-movimiento="si"] *,
+[data-movimiento="si"] *::before,
+[data-movimiento="si"] *::after { animation: none !important; transition-duration: 0.01ms !important; }
+[data-movimiento="si"] [data-parallax] { transform: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .llama, .rayo, .sala-luz-velas::before, .sala-luz-velas::after { animation: none; }
+  .sala-camara { transition: none; }
+}
+
+/* Materiales y luz de El Taller */
+.sala-brillo { transition: background 300ms ease; }
+.sala-escena[data-brillo="tenue"] .sala-brillo { background: rgba(10, 4, 12, 0.32); }
+.sala-escena[data-brillo="brillante"] .sala-brillo { background: rgba(242, 199, 162, 0.11); mix-blend-mode: screen; }
+.sala-escena[data-velas="off"] .sala-glow-vela { display: none; }
+
+/* Editor de la sala: cada objeto tiene una caja táctil (touch-action: none) para poder arrastrarlo sin mover la escena */
+.editor-objeto {
+  position: absolute;
+  touch-action: none;
+  cursor: grab;
+  border-radius: 10px;
+  min-width: 32px;
+  min-height: 32px;
+  -webkit-tap-highlight-color: transparent;
+}
+.editor-objeto:active { cursor: grabbing; }
+.editor-objeto:hover { background: rgba(242, 199, 162, 0.08); }
+.editor-objeto:focus-visible,
+.editor-objeto[data-seleccionado="true"] { outline: 2px dashed #f2c7a2; outline-offset: 3px; background: rgba(242, 199, 162, 0.1); }
+.editor-objeto[data-invalido="true"] { outline: 2px dashed #f0a3a3; background: rgba(240, 163, 163, 0.22); }
+.editor-objeto[data-arrastrando="true"] { cursor: grabbing; }
+.editor-escena { cursor: default; }
+.editor-escena[data-colocando="true"] { cursor: crosshair; }
+.editor-zona-pared { position: absolute; pointer-events: none; background: rgba(240, 163, 163, 0.14); border: 1px dashed rgba(240, 163, 163, 0.6); border-radius: 6px; }
+.editor-franja-suelo { position: absolute; pointer-events: none; border: 1px dashed rgba(242, 199, 162, 0.55); background: rgba(242, 199, 162, 0.05); border-radius: 6px; }
