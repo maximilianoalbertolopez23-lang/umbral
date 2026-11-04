@@ -2,12 +2,12 @@ import type { NextConfig } from "next";
 
 const dev = process.env.NODE_ENV !== "production";
 
-/** CSP sin nonce (compatible con prerender): scripts propios; las portadas sugeridas vienen solo de covers.openlibrary.org. */
+/** CSP sin nonce (compatible con prerender): scripts propios; las portadas sugeridas vienen de covers.openlibrary.org, que redirige a archive.org. */
 const CSP = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://covers.openlibrary.org",
+  "img-src 'self' data: blob: https://covers.openlibrary.org https://archive.org https://*.archive.org",
   "font-src 'self' data:",
   `connect-src 'self'${dev ? " ws: wss:" : ""}`,
   "object-src 'none'",

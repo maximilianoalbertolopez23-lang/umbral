@@ -45,6 +45,38 @@
 @keyframes t-aviso-sale { from { opacity: 1; } to { opacity: 0; transform: translateY(6px); } }
 .t-aviso-entra { animation: t-aviso-entra 300ms ease-out both; }
 .t-aviso-sale { animation: t-aviso-sale 250ms ease-in both; }
+/* Bienvenida: aparición «mágica» de palabras y logo, telón de entrada y motas de luz. */
+@keyframes m-palabra {
+  0% { opacity: 0; filter: blur(14px); transform: translateY(14px) scale(1.08); letter-spacing: 0.16em; text-shadow: 0 0 0 rgba(242, 199, 162, 0); }
+  55% { opacity: 1; filter: blur(2px); text-shadow: 0 0 30px rgba(242, 199, 162, 0.95); }
+  100% { opacity: 1; filter: blur(0); transform: none; letter-spacing: normal; text-shadow: 0 0 14px rgba(242, 199, 162, 0.22); }
+}
+@keyframes m-pulso {
+  0%, 100% { text-shadow: 0 0 14px rgba(242, 199, 162, 0.22); }
+  50% { text-shadow: 0 0 26px rgba(242, 199, 162, 0.95), 0 0 6px rgba(255, 255, 255, 0.7); }
+}
+.m-palabra { display: inline-block; opacity: 0; animation: m-palabra 1500ms cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms) both, m-pulso 1300ms ease-in-out var(--p, 4000ms) 1 both; }
+@keyframes m-logo {
+  0% { opacity: 0; filter: blur(18px) brightness(2.4) drop-shadow(0 0 0 rgba(242, 199, 162, 0)); transform: scale(0.9); }
+  60% { opacity: 1; filter: blur(2px) brightness(1.4) drop-shadow(0 0 40px rgba(242, 199, 162, 0.85)); }
+  100% { opacity: 1; filter: blur(0) brightness(1) drop-shadow(0 0 18px rgba(242, 199, 162, 0.35)); transform: none; }
+}
+.m-logo { animation: m-logo 2600ms cubic-bezier(0.22, 1, 0.36, 1) 500ms both; }
+@keyframes m-halo { 0%, 100% { opacity: 0.35; transform: scale(0.95); } 50% { opacity: 0.75; transform: scale(1.08); } }
+.m-halo { animation: m-halo 6s ease-in-out 2s infinite both; }
+@keyframes m-telon { from { opacity: 1; } to { opacity: 0; } }
+.m-telon { animation: m-telon 2200ms ease-out 100ms both; pointer-events: none; }
+@keyframes m-chispa {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  20% { opacity: var(--o, 0.9); }
+  100% { opacity: 0; transform: translate(var(--dx, 12px), var(--dy, -70px)) scale(1); }
+}
+.m-chispa {
+  position: absolute; width: var(--s, 4px); height: var(--s, 4px); border-radius: 9999px; opacity: 0;
+  background: radial-gradient(circle, #fff 0%, #f2c7a2 40%, transparent 70%);
+  animation: m-chispa var(--t, 7s) ease-out var(--d, 0s) infinite;
+}
+
 /* Pantalla de carga: aparece a los 250 ms para no destellar en cargas rápidas. */
 @keyframes t-carga-entra { from { opacity: 0; } to { opacity: 1; } }
 @keyframes t-barra { 0% { transform: translateX(-110%); } 100% { transform: translateX(310%); } }

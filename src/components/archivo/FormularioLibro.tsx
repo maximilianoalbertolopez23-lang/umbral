@@ -123,8 +123,8 @@ function BuscadorOpenLibrary({ alElegir }: { alElegir: (r: ResultadoBusqueda) =>
       {resultados && resultados.length === 0 && <p className="text-sm text-texto-suave">No encontramos resultados. Probá con otras palabras o cargalo a mano.</p>}
       {resultados && resultados.length > 0 && (
         <ul className="divide-y divide-malva/25 rounded-xl border border-malva/30">
-          {resultados.map((r) => (
-            <li key={r.clave} className="flex items-center gap-3 p-3">
+          {resultados.map((r, i) => (
+            <li key={`${r.clave}-${i}`} className="flex items-center gap-3 p-3">
               {r.coverId ? <img src={`https://covers.openlibrary.org/b/id/${r.coverId}-S.jpg`} alt="" width={40} height={60} className="h-15 w-10 shrink-0 rounded-[2px] bg-velo object-cover" /> : <span aria-hidden="true" className="h-15 w-10 shrink-0 rounded-[2px] bg-velo" />}
               <span className="min-w-0 flex-1 text-sm">
                 <span className="block truncate font-marca text-lg text-marfil">{r.titulo}</span>

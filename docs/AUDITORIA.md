@@ -10,7 +10,7 @@ Fecha: 2026-11-02. Alcance acotado a lo que se pudo **verificar**; lo no verific
 - `npm run build`: compila y genera todas las rutas, incluida `/api/exportar`, tras los cambios de esta pasada.
 
 ## Correcciones realizadas
-1. **Cabeceras de seguridad** (`next.config.ts`): CSP (scripts/estilos propios, imágenes solo propias y `covers.openlibrary.org`, `frame-ancestors 'none'`, `object-src 'none'`), HSTS (solo producción), `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`. Verificadas `X-Frame-Options` y CSP en respuesta real.
+1. **Cabeceras de seguridad** (`next.config.ts`): CSP (scripts/estilos propios, imágenes solo propias, `covers.openlibrary.org` y `archive.org` (a donde redirige), `frame-ancestors 'none'`, `object-src 'none'`), HSTS (solo producción), `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`. Verificadas `X-Frame-Options` y CSP en respuesta real.
 2. **Exportación de datos** (`/api/exportar`, botón en El Taller): JSON con las 14 tablas de la persona (binarios en base64), solo con sesión (401 sin ella), `no-store`. Probada con la cuenta de prueba.
 3. **Navegación móvil:** la barra inferior tenía 4 columnas para 5 módulos desde que la Torre pasó a núcleo; ahora se calcula según el registro (5 columnas de 75 px a 375 px, sin scroll horizontal).
 4. **Documentación:** `TALLER.md`, `DESPLIEGUE.md`, PLAN y README actualizados.

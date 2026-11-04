@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { Escena } from "@/components/escena/Escena";
+import { ChispasMagicas, TextoMagico } from "@/components/inicio/Magia";
+import { FondoAnimado } from "@/components/inicio/FondoAnimado";
+import { MusicaAmbiente } from "@/components/inicio/MusicaAmbiente";
 import { SceneBackground } from "@/components/scene/SceneBackground";
+import { escena } from "@/config/sceneRegistry";
 import { ListaHabitaciones } from "@/components/mundo/ListaHabitaciones";
 
 const botonPrimario =
@@ -23,23 +27,31 @@ export default function Landing() {
         </div>
       </header>
 
+      <MusicaAmbiente />
+
       <main id="contenido">
         <Escena className="relative isolate flex min-h-svh flex-col items-center justify-center overflow-hidden px-5 pb-28 pt-28 text-center">
           <SceneBackground id="01_bienvenida_castillo" priority className="-z-20" />
+          <FondoAnimado src={escena("01_bienvenida_castillo").src} ancho={escena("01_bienvenida_castillo").ancho} alto={escena("01_bienvenida_castillo").alto} />
           <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(46,24,47,0.55),rgba(46,24,47,0.35)_40%,rgba(46,24,47,0.88))]" />
+          <div aria-hidden="true" className="m-telon absolute inset-0 -z-[8] bg-ciruela" />
+          <ChispasMagicas />
 
-          <div className="animate-aparecer">
-            <Logo variante="vertical" alto={420} priority className="mx-auto h-auto w-[min(76vw,400px)]" />
+          <div className="relative">
+            <div aria-hidden="true" className="m-halo absolute left-1/2 top-1/2 -z-10 size-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(242,199,162,0.35),transparent_65%)]" />
+            <div className="m-logo">
+              <Logo variante="vertical" alto={420} priority className="mx-auto h-auto w-[min(76vw,400px)]" />
+            </div>
           </div>
 
-          <h1 className="mt-8 max-w-2xl animate-aparecer font-marca text-3xl italic leading-tight text-marfil [animation-delay:200ms] sm:text-5xl">
-            Los libros no se guardan. Se habitan.
+          <h1 className="mt-8 max-w-2xl font-marca text-3xl italic leading-tight text-marfil sm:text-5xl">
+            <TextoMagico texto="Los libros no se guardan. Se habitan." retrasoMs={2000} />
           </h1>
-          <p className="mt-4 max-w-xl animate-aparecer text-base leading-relaxed text-texto-suave [animation-delay:350ms] sm:text-lg">
+          <p className="mt-4 max-w-xl animate-aparecer text-base leading-relaxed text-texto-suave [animation-delay:4200ms] sm:text-lg">
             UMBRAL es un journal de lectura que se vive como un mundo: una biblioteca antigua que cambia con cada libro
             que registrás.
           </p>
-          <div className="mt-9 flex animate-aparecer flex-col gap-3 [animation-delay:500ms] sm:flex-row">
+          <div className="mt-9 flex animate-aparecer flex-col gap-3 [animation-delay:4700ms] sm:flex-row">
             <Link href="/sala" className={botonPrimario}>
               Cruzar el umbral
             </Link>
@@ -69,24 +81,15 @@ export default function Landing() {
         <section aria-labelledby="habitaciones" className="mx-auto max-w-4xl px-5 pb-24 sm:px-8">
           <p className="text-xs uppercase tracking-[0.2em] text-malva">Las habitaciones</p>
           <h2 id="habitaciones" className="mt-3 font-marca text-4xl leading-tight text-marfil sm:text-5xl">
-            Seis puertas, cuatro abiertas al comienzo
+            Cinco puertas abiertas, una por llegar
           </h2>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-texto-suave">
-            Las primeras cuatro forman el núcleo inicial. La Torre y los Portales llegarán después, sin rehacer lo
-            construido.
+            La Gran Sala, el Archivo, el Escritorio, el Taller y la Torre ya están abiertos. Los Portales llegarán
+            después, sin rehacer lo construido.
           </p>
           <ListaHabitaciones className="mt-10" />
         </section>
 
-        <section className="border-t border-malva/25 bg-noche px-5 py-14 sm:px-8">
-          <div className="mx-auto flex max-w-4xl flex-col gap-3">
-            <p className="text-xs uppercase tracking-[0.2em] text-malva">Estado del proyecto</p>
-            <p className="max-w-2xl leading-relaxed text-texto-suave">
-              Etapa 1 · Fundamentos. La identidad y la navegación ya están construidas. Las cuentas, el registro de
-              libros y el resto de las funciones todavía no existen: cada habitación lo indica con claridad.
-            </p>
-          </div>
-        </section>
       </main>
 
       <footer className="bg-noche px-5 pb-12 sm:px-8">
