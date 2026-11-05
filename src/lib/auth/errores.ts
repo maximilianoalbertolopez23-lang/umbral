@@ -1,7 +1,7 @@
 /** Traduce errores de Better Auth a mensajes claros. Nunca se muestra el texto crudo del servicio. */
 const MENSAJES: Record<string, string> = {
   INVALID_EMAIL_OR_PASSWORD: "El correo o la contraseña no son correctos.",
-  EMAIL_NOT_VERIFIED: "Todavía no confirmaste tu correo. Revisá tu bandeja de entrada (y el spam).",
+  EMAIL_NOT_VERIFIED: "Todavía no confirmaste tu correo. Te enviamos el mensaje de nuevo: revisá tu bandeja de entrada (y el spam).",
   USER_ALREADY_EXISTS: "Ya existe una cuenta con ese correo. Probá iniciar sesión.",
   USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL: "Ya existe una cuenta con ese correo. Probá iniciar sesión.",
   PASSWORD_TOO_SHORT: "La contraseña debe tener al menos 8 caracteres.",

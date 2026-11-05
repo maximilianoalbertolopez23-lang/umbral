@@ -36,7 +36,8 @@ export async function ingresar(_: EstadoForm, fd: FormData): Promise<EstadoForm>
 
   try {
     await obtenerAuth().api.signInEmail({
-      body: { email: r.data.correo, password: r.data.contrasena },
+      // callbackURL: a dónde lleva el enlace del correo si hubo que reenviarlo (cuenta sin confirmar).
+      body: { email: r.data.correo, password: r.data.contrasena, callbackURL: "/bienvenida" },
       headers: await headers(),
     });
   } catch (error) {

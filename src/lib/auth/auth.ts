@@ -18,9 +18,17 @@ function crearAuth() {
       resetPasswordTokenExpiresIn: 60 * 60,
       revokeSessionsOnPasswordReset: true,
       sendResetPassword: async ({ user, url }) => enviarCorreo(correoRecuperacion(user.email, url)),
+      // Registrarse con un correo que ya existe responde igual que siempre (no revela si hay cuenta), pero si esa cuenta
+      // quedó sin confirmar se le vuelve a mandar el correo de confirmación: así nadie queda trabado.
+      onExistingUserSignUp: async ({ user }) => {
+        if (user.emailVerified) return;
+        await obtenerAuth().api.sendVerificationEmail({ body: { email: user.email, callbackURL: "/bienvenida" } });
+      },
     },
     emailVerification: {
       sendOnSignUp: true,
+      // Intentar entrar con una cuenta sin confirmar reenvía el correo de confirmación.
+      sendOnSignIn: true,
       autoSignInAfterVerification: true,
       sendVerificationEmail: async ({ user, url }) => enviarCorreo(correoVerificacion(user.email, url)),
     },
