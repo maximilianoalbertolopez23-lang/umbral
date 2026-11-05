@@ -12,7 +12,11 @@ interface Correo {
 export async function enviarCorreo({ para, asunto, texto, html }: Correo) {
   const smtp = process.env.SMTP_URL;
   if (!smtp) {
-    if (process.env.NODE_ENV === "production") throw new Error("SMTP_URL no está configurado.");
+    if (process.env.NODE_ENV === "production" && process.env.CORREO_OPCIONAL !== "1") throw new Error("SMTP_URL no está configurado.");
+    if (process.env.NODE_ENV === "production") {
+      console.warn(`[correo] Modo sin correo: no se envió «${asunto}» a ${para}.`);
+      return;
+    }
     console.info(`\n[correo de desarrollo, SMTP_URL sin configurar]\nPara: ${para}\nAsunto: ${asunto}\n${texto}\n`);
     return;
   }
