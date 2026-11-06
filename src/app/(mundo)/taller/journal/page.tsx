@@ -6,6 +6,8 @@ import { requerirGuardiana } from "@/lib/auth/dal";
 import { conUsuario } from "@/lib/db";
 import { obtenerInventario, sincronizarProgreso } from "@/modules/torre/repositorio";
 import { listarPlantillas, obtenerPreferenciaPlantilla } from "@/modules/taller/repositorio";
+import { redirect } from "next/navigation";
+import { JUEGO_ACTIVO } from "@/lib/juego";
 
 export const metadata: Metadata = { title: "Personalizar el journal" };
 
@@ -24,6 +26,7 @@ async function Contenido() {
 }
 
 export default function TallerJournalPage() {
+  if (!JUEGO_ACTIVO) redirect("/archivo"); // el juego está apagado (src/lib/juego.ts)
   return (
     <>
       <Link href="/taller" className="text-sm text-texto-suave underline-offset-4 hover:text-durazno hover:underline">

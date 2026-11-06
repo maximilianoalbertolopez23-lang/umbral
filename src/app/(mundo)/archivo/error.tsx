@@ -1,5 +1,7 @@
 "use client";
 
+import { JUEGO_ACTIVO, RUTA_INICIO } from "@/lib/juego";
+
 import Link from "next/link";
 
 export default function ErrorArchivo({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
@@ -13,8 +15,8 @@ export default function ErrorArchivo({ reset }: { error: Error & { digest?: stri
         <button onClick={reset} className="min-h-11 rounded-full bg-durazno px-6 text-sm font-medium text-ciruela hover:bg-marfil">
           Reintentar
         </button>
-        <Link href="/sala" className="min-h-11 content-center rounded-full border border-malva/60 px-6 text-sm text-texto-suave hover:text-marfil">
-          Volver a la Gran Sala
+        <Link href={RUTA_INICIO} className="min-h-11 content-center rounded-full border border-malva/60 px-6 text-sm text-texto-suave hover:text-marfil">
+          {JUEGO_ACTIVO ? "Volver a la Gran Sala" : "Volver al inicio"}
         </Link>
       </div>
     </div>

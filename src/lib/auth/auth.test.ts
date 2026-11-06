@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { RUTA_INICIO } from "@/lib/juego";
 import { MENSAJE_GENERICO, mensajeErrorAuth } from "./errores";
 import { rutaSegura } from "./redireccion";
 
@@ -10,7 +11,7 @@ describe("rutaSegura", () => {
 
   it("rechaza destinos externos o maliciosos", () => {
     for (const malo of ["https://evil.com", "//evil.com", "/\\evil.com", "javascript:alert(1)", "evil", "/a\nb", "", null, undefined]) {
-      expect(rutaSegura(malo), String(malo)).toBe("/sala");
+      expect(rutaSegura(malo), String(malo)).toBe(RUTA_INICIO);
     }
   });
 });

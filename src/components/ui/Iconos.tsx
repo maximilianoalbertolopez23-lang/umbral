@@ -7,6 +7,7 @@ const trazos: Record<ModuloId, React.ReactNode> = {
   escritorio: <path d="M20 4C12 5 7 10 5.5 16.5L4 20l3.5-1.5C14 17 19 12 20 4ZM9 15l5-5" />,
   taller: <path d="M14.5 6.5 17.5 3.5l3 3-3 3M3 21l10.5-10.5M12 8l4 4M6 14l4 4" />,
   torre: <path d="M8 21V9l-1-5h10l-1 5v12M8 21h8M12 12v3M4 21h16" />,
+  ajustes: <path d="M4 7h9M17 7h3M4 17h3M11 17h9M15 4v6M9 14v6" />,
   portales: <path d="M12 3a8 8 0 0 0-8 8v10h16V11a8 8 0 0 0-8-8Zm0 5a3 3 0 0 0-3 3v10h6V11a3 3 0 0 0-3-3Z" />,
 };
 

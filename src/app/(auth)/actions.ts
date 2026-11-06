@@ -1,5 +1,7 @@
 "use server";
 
+import { RUTA_INICIO } from "@/lib/juego";
+
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { obtenerAuth } from "@/lib/auth/auth";
@@ -43,7 +45,7 @@ export async function ingresar(_: EstadoForm, fd: FormData): Promise<EstadoForm>
   } catch (error) {
     return { error: mensajeErrorAuth(error), valores: { correo: entrada.correo } };
   }
-  redirect(rutaSegura(texto(fd, "siguiente"), "/sala"));
+  redirect(rutaSegura(texto(fd, "siguiente"), RUTA_INICIO));
 }
 
 export async function registrar(_: EstadoForm, fd: FormData): Promise<EstadoForm> {

@@ -2,6 +2,7 @@
 
 > **Estado (2026-11-04):** UMBRAL **está publicada** en https://umbral-topaz.vercel.app (Vercel, proyecto `umbral`, desplegada desde `main` de GitHub) con la base en Neon.
 > Verificado desde afuera: la portada, el ingreso y el registro cargan, `/sala` sin sesión redirige al ingreso, `/api/exportar` responde 401 y llegan las cabeceras de seguridad. **Todavía no se probó** un registro real con el correo de confirmación: hacerlo antes de pasar el enlace.
+> Se publica en **modo diario** (solo Archivo y Escritorio; el juego está apagado, ver `docs/MODO_DIARIO.md`).
 > Ojo: `BETTER_AUTH_URL` debe ser exactamente esa dirección. La otra (`umbral-maxi-8648.vercel.app`) queda detrás del login de Vercel y no sirve para compartir.
 
 ## Qué se necesita (y quién lo hace)

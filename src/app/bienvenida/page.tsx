@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Onboarding } from "@/components/onboarding/Onboarding";
+import { OnboardingDiario } from "@/components/onboarding/OnboardingDiario";
 import { FondoPortal } from "@/components/escena/FondoPortal";
 import { requerirOnboardingPendiente } from "@/lib/auth/dal";
+import { JUEGO_ACTIVO } from "@/lib/juego";
 
-export const metadata: Metadata = { title: "Bienvenida, Guardiana" };
+export const metadata: Metadata = { title: "Bienvenida" };
 
 async function Contenido() {
   const estado = await requerirOnboardingPendiente();
+  if (!JUEGO_ACTIVO) return <OnboardingDiario nombre={estado.guardianaNombre ?? ""} biblioteca={estado.bibliotecaNombre ?? ""} />;
   return (
     <Onboarding
       pasoInicial={estado.paso === "completo" ? "guardiana" : estado.paso}

@@ -9,6 +9,8 @@ import { conUsuario } from "@/lib/db";
 import { estadisticasAnio } from "@/modules/escritorio/repositorio";
 import { obtenerArticulo } from "@/modules/torre/reglas";
 import { obtenerProgreso, sincronizarProgreso } from "@/modules/torre/repositorio";
+import { redirect } from "next/navigation";
+import { JUEGO_ACTIVO } from "@/lib/juego";
 
 export const metadata: Metadata = { title: "La Torre" };
 
@@ -154,6 +156,7 @@ async function Contenido() {
 }
 
 export default function TorrePage() {
+  if (!JUEGO_ACTIVO) redirect("/archivo"); // el juego está apagado (src/lib/juego.ts)
   return (
     <article>
       <p className="font-marca text-3xl text-durazno">V</p>

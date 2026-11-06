@@ -3,8 +3,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { obtenerAuth } from "@/lib/auth/auth";
 import { rutaSegura } from "@/lib/auth/redireccion";
 import { backendConfigurado } from "@/lib/config";
+import { RUTA_INICIO } from "@/lib/juego";
 
-const PRIVADAS = ["/sala", "/archivo", "/escritorio", "/taller", "/torre", "/portales", "/bienvenida"];
+const PRIVADAS = ["/sala", "/archivo", "/escritorio", "/taller", "/torre", "/portales", "/ajustes", "/bienvenida"];
 const SOLO_INVITADAS = ["/ingresar", "/registro", "/recuperar"];
 
 const coincide = (pathname: string, base: string) => pathname === base || pathname.startsWith(`${base}/`);
@@ -31,11 +32,11 @@ export async function proxy(request: NextRequest) {
   }
 
   if (!conSesion && privada) {
-    const siguiente = rutaSegura(pathname + search, "/sala");
+    const siguiente = rutaSegura(pathname + search, RUTA_INICIO);
     return NextResponse.redirect(new URL(`/ingresar?siguiente=${encodeURIComponent(siguiente)}`, request.url));
   }
   if (conSesion && invitada) {
-    return NextResponse.redirect(new URL("/sala", request.url));
+    return NextResponse.redirect(new URL(RUTA_INICIO, request.url));
   }
   return NextResponse.next();
 }

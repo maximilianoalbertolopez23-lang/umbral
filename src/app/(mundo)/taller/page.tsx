@@ -8,6 +8,8 @@ import { requerirGuardiana } from "@/lib/auth/dal";
 import { conUsuario } from "@/lib/db";
 import { obtenerDisenoSala } from "@/modules/taller/repositorio";
 import { getModulo } from "@/modules/registry";
+import { redirect } from "next/navigation";
+import { JUEGO_ACTIVO } from "@/lib/juego";
 
 const modulo = getModulo("taller");
 export const metadata: Metadata = { title: modulo.titulo };
@@ -26,6 +28,7 @@ async function Banner() {
 }
 
 export default function TallerPage() {
+  if (!JUEGO_ACTIVO) redirect("/archivo"); // el juego está apagado (src/lib/juego.ts)
   return (
     <>
       <header className="mb-8">

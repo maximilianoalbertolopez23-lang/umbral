@@ -3,7 +3,8 @@
 import { redirect } from "next/navigation";
 import { obtenerUsuario } from "@/lib/auth/dal";
 import { conUsuario } from "@/lib/db";
-import { erroresPorCampo, esquemaApariencia, esquemaBiblioteca, esquemaGuardiana } from "@/lib/validacion";
+import { RUTA_INICIO } from "@/lib/juego";
+import { erroresPorCampo, esquemaApariencia, esquemaBiblioteca, esquemaDiario, esquemaGuardiana } from "@/lib/validacion";
 import type { EstadoForm } from "@/app/(auth)/actions";
 
 /**
@@ -84,5 +85,29 @@ export async function entrarEnLaSala(): Promise<EstadoForm> {
   } catch {
     return { error: "Todavía falta completar algún paso. Volvé atrás y revisalo." };
   }
-  redirect("/sala");
+  redirect(RUTA_INICIO);
+}
+
+/** Bienvenida del diario (sin juego): guarda el nombre y el de la biblioteca, completa el onboarding y entra al Archivo. */
+export async function comenzarDiario(_: EstadoForm, fd: FormData): Promise<EstadoForm> {
+  const valores = { nombre: texto(fd, "nombre"), biblioteca: texto(fd, "biblioteca") };
+  const r = esquemaDiario.safeParse(valores);
+  if (!r.success) return { campos: erroresPorCampo(r.error), valores };
+  const usuario = await obtenerUsuario();
+  if (!usuario) return { error: SESION_VENCIDA, valores };
+
+  try {
+    await conUsuario(usuario.id, async (db) => {
+      await db.query("update profiles set guardiana_nombre = $1 where id = $2", [r.data.nombre, usuario.id]);
+      const actualizada = await db.query("update bibliotecas set nombre = $1 where user_id = $2", [r.data.biblioteca, usuario.id]);
+      if (!actualizada.rowCount) await db.query("insert into bibliotecas (user_id, nombre) values ($1, $2)", [usuario.id, r.data.biblioteca]);
+      const id = (await db.query<{ id: string }>("select id from bibliotecas where user_id = $1", [usuario.id])).rows[0]?.id;
+      const luz = await db.query("update personalizaciones set apariencia = coalesce(apariencia, 'noche') where biblioteca_id = $1", [id]);
+      if (!luz.rowCount) await db.query("insert into personalizaciones (biblioteca_id, user_id, apariencia) values ($1, $2, 'noche')", [id, usuario.id]);
+      await db.query("select completar_onboarding()");
+    });
+  } catch {
+    return { error: ERROR_GENERAL, valores };
+  }
+  redirect(RUTA_INICIO);
 }

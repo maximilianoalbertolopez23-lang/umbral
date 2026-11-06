@@ -6,6 +6,7 @@ import { obtenerAuth } from "@/lib/auth/auth";
 import { backendConfigurado } from "@/lib/config";
 import { conUsuario } from "@/lib/db";
 import { derivarPaso, type DatosOnboarding, type PasoOnboarding } from "@/modules/onboarding/pasos";
+import { RUTA_INICIO } from "@/lib/juego";
 
 /**
  * Capa de acceso a datos de sesión. Autoriza en el servidor (la sesión se valida contra la base);
@@ -58,6 +59,6 @@ export async function requerirGuardiana(): Promise<EstadoGuardiana> {
 export async function requerirOnboardingPendiente(): Promise<EstadoGuardiana> {
   const estado = await obtenerEstadoGuardiana();
   if (!estado) redirect("/ingresar");
-  if (estado.paso === "completo") redirect("/sala");
+  if (estado.paso === "completo") redirect(RUTA_INICIO);
   return estado;
 }

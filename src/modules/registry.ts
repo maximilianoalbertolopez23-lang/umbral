@@ -1,10 +1,12 @@
+import { JUEGO_ACTIVO } from "@/lib/juego";
+
 /**
  * Registro de habitaciones (módulos) de UMBRAL.
  * Única fuente de verdad para la navegación, la landing y las páginas de cada habitación.
  * Para sumar un módulo futuro: agregar una entrada aquí y una carpeta en src/app/(mundo)/<ruta>.
  */
 
-export type ModuloId = "sala" | "archivo" | "escritorio" | "taller" | "torre" | "portales";
+export type ModuloId = "sala" | "archivo" | "escritorio" | "taller" | "torre" | "portales" | "ajustes";
 
 /** nucleo = parte de la versión inicial; futuro = se desarrolla progresivamente. */
 export type FaseModulo = "nucleo" | "futuro";
@@ -24,11 +26,16 @@ export interface Modulo {
   contendra: readonly string[];
   fase: FaseModulo;
   estado: EstadoModulo;
+  /** Pertenece al juego: se oculta mientras el juego está apagado (src/lib/juego.ts). */
+  juego: boolean;
+  /** Solo se muestra con el juego apagado (el juego tiene su propio lugar para esto). */
+  soloDiario?: boolean;
 }
 
 export const MODULOS: readonly Modulo[] = [
   {
     id: "sala",
+    juego: true,
     nombre: "Gran Sala",
     titulo: "La Gran Sala",
     ruta: "/sala",
@@ -44,6 +51,7 @@ export const MODULOS: readonly Modulo[] = [
   },
   {
     id: "archivo",
+    juego: false,
     nombre: "Archivo",
     titulo: "El Archivo",
     ruta: "/archivo",
@@ -59,6 +67,7 @@ export const MODULOS: readonly Modulo[] = [
   },
   {
     id: "escritorio",
+    juego: false,
     nombre: "Escritorio",
     titulo: "El Escritorio",
     ruta: "/escritorio",
@@ -74,6 +83,7 @@ export const MODULOS: readonly Modulo[] = [
   },
   {
     id: "taller",
+    juego: true,
     nombre: "Taller",
     titulo: "El Taller",
     ruta: "/taller",
@@ -89,6 +99,7 @@ export const MODULOS: readonly Modulo[] = [
   },
   {
     id: "torre",
+    juego: true,
     nombre: "Torre",
     titulo: "La Torre",
     ruta: "/torre",
@@ -100,6 +111,7 @@ export const MODULOS: readonly Modulo[] = [
   },
   {
     id: "portales",
+    juego: true,
     nombre: "Portales",
     titulo: "Los Portales",
     ruta: "/portales",
@@ -108,6 +120,19 @@ export const MODULOS: readonly Modulo[] = [
     contendra: ["Experiencias narrativas", "Desafíos especiales"],
     fase: "futuro",
     estado: "planificado",
+  },
+  {
+    id: "ajustes",
+    juego: false,
+    soloDiario: true,
+    nombre: "Ajustes",
+    titulo: "Ajustes",
+    ruta: "/ajustes",
+    numeral: "VII",
+    resumen: "Tus datos: descargá una copia de todo lo que escribiste o recuperala.",
+    contendra: ["Copia de seguridad completa", "Restaurar desde una copia"],
+    fase: "nucleo",
+    estado: "disponible",
   },
 ];
 
@@ -118,3 +143,6 @@ export function getModulo(id: ModuloId): Modulo {
 }
 
 export const MODULOS_NUCLEO = MODULOS.filter((m) => m.fase === "nucleo");
+
+/** Lo que se muestra en la navegación según el interruptor del juego. */
+export const MODULOS_VISIBLES = MODULOS.filter((m) => (m.soloDiario ? !JUEGO_ACTIVO : JUEGO_ACTIVO || !m.juego));

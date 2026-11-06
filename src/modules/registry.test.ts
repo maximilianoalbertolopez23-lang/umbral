@@ -9,9 +9,8 @@ describe("registro de módulos", () => {
     }
   });
 
-  it("el núcleo inicial son las cinco primeras habitaciones", () => {
-    expect(MODULOS_NUCLEO.map((m) => m.id)).toEqual(["sala", "archivo", "escritorio", "taller", "torre"]);
-    expect(MODULOS.slice(0, 5)).toEqual(MODULOS_NUCLEO);
+  it("el núcleo son las cinco habitaciones del mundo más los Ajustes", () => {
+    expect(MODULOS_NUCLEO.map((m) => m.id)).toEqual(["sala", "archivo", "escritorio", "taller", "torre", "ajustes"]);
   });
 
   it("la ruta de cada módulo es su id", () => {
@@ -19,7 +18,7 @@ describe("registro de módulos", () => {
   });
 
   it("solo los módulos ya implementados se declaran disponibles", () => {
-    expect(MODULOS.filter((m) => m.estado === "disponible").map((m) => m.id)).toEqual(["sala", "archivo", "escritorio", "taller", "torre"]);
+    expect(MODULOS.filter((m) => m.estado === "disponible").map((m) => m.id)).toEqual(["sala", "archivo", "escritorio", "taller", "torre", "ajustes"]);
   });
 
   it("getModulo devuelve el módulo pedido", () => {

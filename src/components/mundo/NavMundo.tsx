@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MODULOS, MODULOS_NUCLEO } from "@/modules/registry";
+import { MODULOS_VISIBLES } from "@/modules/registry";
 import { IconoModulo } from "@/components/ui/Iconos";
 
 function activa(pathname: string, ruta: string) {
@@ -14,7 +14,7 @@ export function NavLateral() {
   const pathname = usePathname();
   return (
     <nav aria-label="Habitaciones" className="flex flex-col gap-1">
-      {MODULOS.map((m) => (
+      {MODULOS_VISIBLES.map((m) => (
         <Link
           key={m.id}
           href={m.ruta}
@@ -33,13 +33,14 @@ export function NavLateral() {
 /** Barra inferior (celular): los módulos núcleo. Portales se alcanza desde la Gran Sala. */
 export function NavInferior() {
   const pathname = usePathname();
+  const modulos = MODULOS_VISIBLES.filter((m) => m.estado === "disponible");
   return (
     <nav
       aria-label="Habitaciones"
       className="fixed inset-x-0 bottom-0 z-30 border-t border-malva/25 bg-noche/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
     >
-      <ul className="mx-auto grid max-w-lg" style={{ gridTemplateColumns: `repeat(${MODULOS_NUCLEO.length}, minmax(0, 1fr))` }}>
-        {MODULOS_NUCLEO.map((m) => (
+      <ul className="mx-auto grid max-w-lg" style={{ gridTemplateColumns: `repeat(${modulos.length}, minmax(0, 1fr))` }}>
+        {modulos.map((m) => (
           <li key={m.id}>
             <Link
               href={m.ruta}

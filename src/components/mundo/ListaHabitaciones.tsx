@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MODULOS } from "@/modules/registry";
+import { MODULOS_VISIBLES } from "@/modules/registry";
 
 const ETIQUETA_FASE = { nucleo: "Núcleo inicial", futuro: "Más adelante" } as const;
 
@@ -7,7 +7,7 @@ const ETIQUETA_FASE = { nucleo: "Núcleo inicial", futuro: "Más adelante" } as 
 export function ListaHabitaciones({ className }: { className?: string }) {
   return (
     <ol className={`divide-y divide-malva/25 border-y border-malva/25 ${className ?? ""}`}>
-      {MODULOS.map((m) => (
+      {MODULOS_VISIBLES.map((m) => (
         <li key={m.id}>
           <Link
             href={m.ruta}

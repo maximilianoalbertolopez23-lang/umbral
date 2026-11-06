@@ -1,5 +1,7 @@
 "use client";
 
+import { JUEGO_ACTIVO, RUTA_INICIO } from "@/lib/juego";
+
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { FONDOS_CARGA } from "@/config/sceneRegistry";
@@ -76,8 +78,8 @@ export function PantallaCarga({ mensaje = "Preparando la biblioteca…" }: { men
               <button type="button" onClick={() => window.location.reload()} className="min-h-11 rounded-full bg-durazno px-5 text-sm font-medium text-ciruela hover:bg-marfil">
                 Reintentar
               </button>
-              <a href="/sala" className="inline-flex min-h-11 items-center rounded-full border border-durazno/60 px-5 text-sm text-durazno hover:bg-durazno/10">
-                Ir a la Gran Sala
+              <a href={RUTA_INICIO} className="inline-flex min-h-11 items-center rounded-full border border-durazno/60 px-5 text-sm text-durazno hover:bg-durazno/10">
+                {JUEGO_ACTIVO ? "Ir a la Gran Sala" : "Ir al inicio"}
               </a>
             </div>
           </div>

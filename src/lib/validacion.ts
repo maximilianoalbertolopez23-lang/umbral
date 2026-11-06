@@ -68,3 +68,9 @@ export function erroresPorCampo(error: z.ZodError): Record<string, string> {
   }
   return salida;
 }
+
+/** Bienvenida del diario: el nombre y el nombre de la biblioteca, en un solo paso. */
+export const esquemaDiario = z.object({
+  nombre: esquemaGuardiana.shape.nombre,
+  biblioteca: esquemaBiblioteca.shape.nombre,
+});

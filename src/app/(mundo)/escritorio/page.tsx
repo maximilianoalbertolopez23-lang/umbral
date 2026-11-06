@@ -10,6 +10,7 @@ import { conUsuario } from "@/lib/db";
 import { listarLibros } from "@/modules/archivo/repositorio";
 import { contarPaginasPorLibro, listarPaginas, listarPapelera, obtenerPlantillaPreferida } from "@/modules/escritorio/repositorio";
 import { getModulo } from "@/modules/registry";
+import { JUEGO_ACTIVO } from "@/lib/juego";
 
 const modulo = getModulo("escritorio");
 export const metadata: Metadata = { title: modulo.titulo };
@@ -22,12 +23,12 @@ async function Contenido() {
     cuentas: await contarPaginasPorLibro(db, g.userId),
     papelera: (await listarPapelera(db, g.userId)).length,
     plantilla: await obtenerPlantillaPreferida(db, g.userId),
-    diseno: (await obtenerDisenoSala(db, g.userId)).diseno,
+    diseno: JUEGO_ACTIVO ? (await obtenerDisenoSala(db, g.userId)).diseno : undefined,
   }));
 
   return (
     <div className="space-y-12">
-      <VistaEstancia estancia="escritorio" libros={d.libros} diseno={d.diseno} />
+      {JUEGO_ACTIVO && <VistaEstancia estancia="escritorio" libros={d.libros} diseno={d.diseno} />}
       <section aria-labelledby="general">
         <h2 id="general" className="font-marca text-3xl text-marfil">Diario general</h2>
         <p className="mb-4 mt-1 max-w-2xl text-texto-suave">

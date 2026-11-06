@@ -12,6 +12,8 @@ import { getModulo } from "@/modules/registry";
 import { contarPaginasJournal } from "@/modules/sala/repositorio";
 import { obtenerDisenoSala } from "@/modules/taller/repositorio";
 import { resolverMateriales } from "@/modules/taller/sala";
+import { redirect } from "next/navigation";
+import { JUEGO_ACTIVO } from "@/lib/juego";
 
 const modulo = getModulo("sala");
 export const metadata: Metadata = { title: modulo.titulo };
@@ -77,6 +79,7 @@ async function Contenido() {
 }
 
 export default function SalaPage() {
+  if (!JUEGO_ACTIVO) redirect("/archivo"); // el juego está apagado (src/lib/juego.ts)
   return (
     <Suspense fallback={<div role="status" aria-label="Abriendo la Gran Sala" className="aspect-video animate-titilar rounded-3xl bg-velo/50" />}>
       <Contenido />

@@ -7,6 +7,7 @@ import { requerirGuardiana } from "@/lib/auth/dal";
 import { conUsuario } from "@/lib/db";
 import { listarLibros, obtenerVistaArchivo } from "@/modules/archivo/repositorio";
 import { getModulo } from "@/modules/registry";
+import { JUEGO_ACTIVO } from "@/lib/juego";
 
 const modulo = getModulo("archivo");
 export const metadata: Metadata = { title: modulo.titulo };
@@ -16,11 +17,11 @@ async function Contenido() {
   const { libros, vista, diseno } = await conUsuario(g.userId, async (db) => ({
     libros: await listarLibros(db, g.userId),
     vista: await obtenerVistaArchivo(db, g.userId),
-    diseno: (await obtenerDisenoSala(db, g.userId)).diseno,
+    diseno: JUEGO_ACTIVO ? (await obtenerDisenoSala(db, g.userId)).diseno : undefined,
   }));
   return (
     <>
-      <VistaEstancia estancia="archivo" libros={libros} diseno={diseno} />
+      {JUEGO_ACTIVO && <VistaEstancia estancia="archivo" libros={libros} diseno={diseno} />}
       <ArchivoCliente libros={libros} vistaInicial={vista} />
     </>
   );
