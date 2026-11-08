@@ -132,6 +132,7 @@ export async function importarRespaldo(db: Db, userId: string, crudo: unknown): 
   exigirPropios(d.plantillas_journal.map((p) => p.id), plantillas, "plantillas");
 
   // Libros → lecturas → sesiones → portadas.
+  const librosPrevios = await visibles(db, "libros");
   contar("libros", d.libros.length, await insertar(db,
     `insert into libros (id, user_id, biblioteca_id, titulo, autores, isbn, saga, saga_numero, generos, etiquetas, paginas_total, sinopsis, estado,
        calificacion, portada_version, origen, openlibrary_key, created_at, updated_at)
@@ -156,9 +157,16 @@ export async function importarRespaldo(db: Db, userId: string, crudo: unknown): 
       return [s.id, s.lectura_id, userId, s.fecha, s.pagina_inicio, s.pagina_fin, s.minutos ?? null, s.nota ?? null, s.created_at];
     })));
 
-  contar("portadas", d.portadas.length, await insertar(db,
-    "insert into portadas (libro_id, user_id, mime, datos, created_at) values ($1, $2, $3, $4, $5) on conflict do nothing",
-    d.portadas.map((p) => [p.libro_id, userId, p.mime, binario(p.datos, p.mime, "portada"), p.created_at])));
+  // Una portada nueva para un libro que ya existía sube su versión: así la app deja de mostrar el caché anterior.
+  let portadasNuevas = 0;
+  for (const p of d.portadas) {
+    const res = await db.query("insert into portadas (libro_id, user_id, mime, datos, created_at) values ($1, $2, $3, $4, $5) on conflict do nothing", [p.libro_id, userId, p.mime, binario(p.datos, p.mime, "portada"), p.created_at]);
+    if ((res.rowCount ?? 0) > 0) {
+      portadasNuevas++;
+      if (librosPrevios.has(p.libro_id)) await db.query("update libros set portada_version = portada_version + 1 where id = $1", [p.libro_id]);
+    }
+  }
+  contar("portadas", d.portadas.length, portadasNuevas);
 
   // Journal: contenido revalidado con las mismas reglas que el editor.
   contar("diario_paginas", d.diario_paginas.length, await insertar(db,

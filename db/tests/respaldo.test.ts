@@ -136,4 +136,17 @@ describe("respaldo", () => {
     await expect(como(ANA, (db) => importarRespaldo(db, ANA, falsa))).rejects.toBeInstanceOf(ErrorRespaldo);
     expect(await cuenta("diario_imagenes", ANA)).toBe(1);
   });
+
+  it("una portada nueva para un libro que ya existía se agrega y sube la versión", async () => {
+    const copia = structuredClone(archivo);
+    await pg.exec(`delete from portadas where libro_id = '${libroId}'`);
+    const antes = Number((await pg.query<{ v: number }>("select portada_version v from libros where id = $1", [libroId])).rows[0].v);
+    const r = await como(ANA, (db) => importarRespaldo(db, ANA, copia));
+    expect(r.nuevos.portadas).toBe(1);
+    const despues = Number((await pg.query<{ v: number }>("select portada_version v from libros where id = $1", [libroId])).rows[0].v);
+    expect(despues).toBe(antes + 1);
+    const otra = await como(ANA, (db) => importarRespaldo(db, ANA, copia));
+    expect(otra.nuevos.portadas).toBe(0);
+    expect(Number((await pg.query<{ v: number }>("select portada_version v from libros where id = $1", [libroId])).rows[0].v)).toBe(antes + 1);
+  });
 });
