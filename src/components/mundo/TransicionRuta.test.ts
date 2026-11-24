@@ -11,6 +11,6 @@ describe("claseTransicion", () => {
     expect(claseTransicionJuego("/escritorio")).toBe("animate-aparecer");
   });
   it("sin juego no hay transiciones", () => {
-    expect(claseTransicion("/archivo")).toBe("");
+    expect(claseTransicion()).toBe("");
   });
 });

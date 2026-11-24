@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { JUEGO_ACTIVO } from "@/lib/juego";
 
 /** Efecto de entrada según la ruta de destino (T04–T08 del storyboard). Solo CSS: no bloquea teclado ni guardado. */
 export function claseTransicionJuego(ruta: string): string {
@@ -14,15 +13,15 @@ export function claseTransicionJuego(ruta: string): string {
   return "animate-aparecer";
 }
 
-/** Sin juego no hay transiciones: las pantallas cambian de golpe. */
-export function claseTransicion(ruta: string): string {
-  return JUEGO_ACTIVO ? claseTransicionJuego(ruta) : "";
+/** Sin transiciones: las pantallas cambian de golpe (decisión de diseño de la Biblioteca Viva). */
+export function claseTransicion(): string {
+  return "";
 }
 
 export function TransicionRuta({ children }: { children: React.ReactNode }) {
   const ruta = usePathname();
   return (
-    <div key={ruta} className={claseTransicion(ruta)}>
+    <div key={ruta} className={claseTransicion()}>
       {children}
     </div>
   );
