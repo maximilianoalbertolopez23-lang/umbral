@@ -7,6 +7,7 @@ import { requerirGuardiana } from "@/lib/auth/dal";
 import { conUsuario } from "@/lib/db";
 import { listarLibros } from "@/modules/archivo/repositorio";
 import { getModulo } from "@/modules/registry";
+import { obtenerDisenoSala } from "@/modules/taller/repositorio";
 import { contarPaginasJournal } from "@/modules/sala/repositorio";
 import { redirect } from "next/navigation";
 import { JUEGO_ACTIVO } from "@/lib/juego";
@@ -16,13 +17,14 @@ export const metadata: Metadata = { title: modulo.titulo };
 
 async function Contenido() {
   const g = await requerirGuardiana();
-  const { libros, paginas, nuevos, progreso } = await conUsuario(g.userId, async (db) => {
+  const { libros, paginas, nuevos, progreso, guardado } = await conUsuario(g.userId, async (db) => {
     // Registra lo ganado desde la última visita; el aviso solo muestra lo que de verdad quedó registrado.
     const nuevos = await sincronizarProgreso(db, g.userId);
     return {
       libros: await listarLibros(db, g.userId),
       paginas: await contarPaginasJournal(db, g.userId),
       progreso: await obtenerProgreso(db, g.userId),
+      guardado: await obtenerDisenoSala(db, g.userId),
       nuevos,
     };
   });
@@ -40,6 +42,9 @@ async function Contenido() {
         esencias={progreso.esencias}
         piso={{ nivel: progreso.nivel.nivel, titulo: progreso.nivel.titulo, progreso: progreso.nivel.progreso }}
         recompensasNuevas={nuevos.length}
+        diseno={guardado.diseno}
+        versionDiseno={guardado.version}
+        inventario={progreso.inventario}
       />
     </>
   );

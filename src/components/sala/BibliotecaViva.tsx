@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { SalaDecorable } from "@/components/sala/SalaDecorable";
 import { animoDe, frasesDe, type Animo } from "@/modules/sala/companera";
+import type { DisenoSala } from "@/modules/taller/sala";
 
 interface Props {
   nombreGuardiana: string;
@@ -13,6 +15,9 @@ interface Props {
   esencias: number;
   piso: { nivel: number; titulo: string; progreso: number };
   recompensasNuevas: number;
+  diseno: DisenoSala;
+  versionDiseno: number;
+  inventario: string[];
 }
 
 const ESTADO_TEXTO: Record<Animo, string> = { dormida: "durmiendo", leyendo: "leyendo con vos", contenta: "contenta" };
@@ -92,6 +97,8 @@ export function BibliotecaViva(p: Props) {
         </div>
       </section>
 
+      <SalaDecorable diseno={p.diseno} version={p.versionDiseno} inventario={p.inventario} esencias={p.esencias} nivel={p.piso.nivel} />
+
       <nav aria-label="Tu biblioteca" className="grid gap-4 sm:grid-cols-3">
         <Link href="/archivo" className={tarjeta}>
           <span className="font-marca text-2xl text-marfil">Mis libros</span>
@@ -101,9 +108,9 @@ export function BibliotecaViva(p: Props) {
           <span className="font-marca text-2xl text-marfil">Mi diario</span>
           <span className="text-sm text-texto-suave">{p.paginasJournal === 0 ? "Escribí la primera página" : `${p.paginasJournal} ${p.paginasJournal === 1 ? "página" : "páginas"}`}</span>
         </Link>
-        <Link href="/taller" className={tarjeta}>
-          <span className="font-marca text-2xl text-marfil">Decorar</span>
-          <span className="text-sm text-texto-suave">Gastá tus Esencias</span>
+        <Link href="/torre" className={tarjeta}>
+          <span className="font-marca text-2xl text-marfil">La Torre</span>
+          <span className="text-sm text-texto-suave">Misiones y logros</span>
         </Link>
       </nav>
 
